@@ -47,7 +47,7 @@
             // 
             // completionListControl1
             // 
-            this.completionListControl1.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.completionListControl1.BackColor = System.Drawing.SystemColors.Info;
             this.completionListControl1.FormattingEnabled = true;
             this.completionListControl1.ItemHeight = 20;
             this.completionListControl1.Location = new System.Drawing.Point(12, 12);
@@ -67,7 +67,8 @@
             this.Font = new System.Drawing.Font("Consolas", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
+            this.Text = "Typed words predictor";
             this.ResumeLayout(false);
 
         }

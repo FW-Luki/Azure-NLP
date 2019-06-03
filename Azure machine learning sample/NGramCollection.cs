@@ -7,12 +7,24 @@ using System.Threading.Tasks;
 
 namespace Amls
 {
+    /// <summary>
+    /// Contains a collection of <see cref="NGram"/>.
+    /// Used for storing n-grams and getting relevant hints from the collection based on provided context.
+    /// </summary>
     public class NGramCollection
     {
         private const int MaxN = 3;
 
+        /// <summary>
+        /// Gets or sets the array of <see cref="NGram"/>.
+        /// </summary>
         public NGram[] NGrams { get; set; }
 
+        /// <summary>
+        /// Returns a collection of words relevant to provided context.
+        /// </summary>
+        /// <param name="contextWords">Collection of words representing context.</param>
+        /// <returns>An IEnumerable of <see cref="string"/>.</returns>
         public IEnumerable<string> GetHints(IEnumerable<string> contextWords)
         {
             return GetHintsInternal(contextWords).Distinct();
@@ -20,8 +32,8 @@ namespace Amls
 
         private IEnumerable<string> GetHintsInternal(IEnumerable<string> contextWords)
         {
+            //Get unigrams for autocomplete last typed word.
             var recentWord = contextWords.Last();
-
             if (!string.IsNullOrWhiteSpace(recentWord))
             {
                 foreach (var unigram in NGrams.Where(ng => ng.N == 1))
@@ -34,6 +46,7 @@ namespace Amls
                 }
             }
 
+            //Get (n>1)-grams for hints containing words relevant to the context.
             foreach (var ngram in NGrams.Where(ng => ng.N > 1).OrderByDescending(ng => ng.N))
             {
                 var nonEmptyContextWords = contextWords.Where(w => !string.IsNullOrWhiteSpace(w));
@@ -42,24 +55,6 @@ namespace Amls
                     yield return ngram.Words.Last();
                 }
             }
-
-            //for (int n = Math.Min(wordCount, MaxN); n >= 1; n--)
-            //{
-            //    foreach (var ngram in NGrams.Where(ng => ng.Words.Count() == n))
-            //    {
-            //        if (ngram.Words.Last().StartsWith(contextWords.Last()) && !string.IsNullOrWhiteSpace(contextWords.Last()))
-            //        {
-            //            result.Add(ngram.Words.Last());
-            //        }
-
-            //        //car insurance policy buy 
-            //        if (Enumerable.SequenceEqual(ngram.Words.Take(ngram.Words.Count() - 1), contextWords.Skip(contextWords.Count() - n - 1).Take(n - 1)))
-            //        {
-            //            result.Add(ngram.Words.Last());
-            //        }
-                    
-            //    }
-            //}
         }
     }
 }

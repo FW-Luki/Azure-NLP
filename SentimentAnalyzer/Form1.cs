@@ -14,16 +14,17 @@ using Newtonsoft.Json;
 
 namespace SentimentAnalyzer
 {
+    /// <summary>
+    /// Main window.
+    /// </summary>
     public partial class Form1 : Form
     {
+        /// <summary>
+        /// Creates new instance of this window.
+        /// </summary>
         public Form1()
         {
             InitializeComponent();
-        }
-
-        private static readonly object inputTtextSyncLock = new object();
-        private async void textBox1_TextChanged(object sender, EventArgs e)
-        {
         }
 
         private async void textBox1_KeyPress(object sender, KeyPressEventArgs e)
@@ -44,7 +45,7 @@ namespace SentimentAnalyzer
                     label3.Enabled = true;
                     label3.Text = string.Format("{0:P2}", sentiment.Probability);
                 }
-                catch (Exception ex)
+                catch (Exception /*ex*/)
                 {
                     //MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -66,7 +67,7 @@ namespace SentimentAnalyzer
                             {
                                 new Dictionary<string, string>()
                                 {
-                                    { "Col1", "high" },
+                                    { "Col1", "high" }, //This parameter value is not relevant.
                                     { "Col2", text }
                                 }
                             }
@@ -88,8 +89,7 @@ namespace SentimentAnalyzer
                     string result = await response.Content.ReadAsStringAsync();
                     var responseObject = JsonConvert.DeserializeObject<ResultContainer>(result);
 
-                    //return responseObject.Results.output1.
-                    return responseObject.Results.output1.Select(o => new Sentiment() { Score = (Sentiment.SentimentScore)Enum.Parse(typeof(Sentiment.SentimentScore), o.ScoredLabels, true), Probability = double.Parse(o.ScoredProbabilities) }).FirstOrDefault();
+                    return responseObject.Results.output1.Select(o => new Sentiment(o)).FirstOrDefault();
                 }
                 else
                 {
